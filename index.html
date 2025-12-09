@@ -1576,318 +1576,115 @@
     </div>
   </div>
 
-  <script>
-    // Year in footer
-    (function () {
-      const yearEl = document.getElementById("year");
-      if (yearEl) {
-        yearEl.textContent = new Date().getFullYear();
-      }
-    })();
-
-    // Loading phrases & overlay
-    (function () {
-      const overlay = document.getElementById("loadingOverlay");
-      const pageRoot = document.getElementById("pageRoot");
-      const phraseEl = document.getElementById("loadingPhrase");
-      const phrases = [
-        "Tidying up the playroom…",
-        "Finding the favorite stuffed animal…",
-        "Refreshing the snack stash…",
-        "Softening the bedtime stories…",
-        "Packing the diaper bag…",
-        "Straightening the tiny shoes…",
-        "Smoothing out the blanket forts…",
-        "Cueing up lullabies…",
-        "Double-checking emergency contacts…",
-        "Planning craft time with extra glitter (but not on your couch)…",
-        "Wiping sticky fingerprints (lovingly)…",
-        "Checking nap schedules twice…",
-        "Fluffing the pillows on the reading chair…",
-        "Warming bottles & hearts…",
-        "Recharging the bubble machine…"
-      ];
-
-      let idx = 0;
-      if (phraseEl) {
-        phraseEl.textContent = phrases[0];
-        setInterval(function () {
-          idx = (idx + 1) % phrases.length;
-          phraseEl.textContent = phrases[idx];
-        }, 900);
-      }
-
-      const MIN_DISPLAY = 5500;
-      const start = Date.now();
-
-      function hideOverlay() {
-        const elapsed = Date.now() - start;
-        const remaining = Math.max(0, MIN_DISPLAY - elapsed);
-        setTimeout(function () {
-          if (overlay) {
-            overlay.classList.add("hidden");
-          }
-          document.body.classList.remove("loading");
-          if (pageRoot) {
-            pageRoot.classList.add("ready");
-          }
-        }, remaining);
-      }
-
-      window.addEventListener("load", hideOverlay);
-    })();
-
-    // Smooth scroll for nav links
-    (function () {
-      function smoothScrollTo(targetSelector) {
-        const target = document.querySelector(targetSelector);
-        if (!target) return;
-        const rect = target.getBoundingClientRect();
-        const offset = rect.top + window.scrollY - 80;
-        window.scrollTo({ top: offset, behavior: "smooth" });
-      }
-
-      document.querySelectorAll("[data-scroll]").forEach(function (link) {
-        link.addEventListener("click", function () {
-          const sel = link.getAttribute("data-scroll");
-          if (sel) {
-            smoothScrollTo(sel);
-          }
-          const navLinks = document.getElementById("navLinks");
-          if (navLinks && navLinks.classList.contains("open")) {
-            navLinks.classList.remove("open");
-          }
-        });
-      });
-    })();
-
-    // Mobile nav toggle
-    (function () {
-      const toggle = document.getElementById("mobileNavToggle");
-      const navLinks = document.getElementById("navLinks");
-      if (!toggle || !navLinks) return;
-
-      toggle.addEventListener("click", function () {
-        navLinks.classList.toggle("open");
-      });
-    })();
-
-    // Custom plan summary
-    (function () {
-      const ageGroup = document.getElementById("ageGroup");
-      const schedule = document.getElementById("schedule");
-      const extras = document.getElementById("extras");
-      const planSummary = document.getElementById("planSummary");
-
-      function updatePlan() {
-        if (!planSummary) return;
-
-        const age = ageGroup ? ageGroup.value : "";
-        const sched = schedule ? schedule.value : "";
-        const extraOptions = extras
-          ? Array.from(extras.selectedOptions || []).map(function (o) {
-              return o.value;
-            })
-          : [];
-
-        if (!age && !sched && extraOptions.length === 0) {
-          planSummary.textContent =
-            "Choose your children’s age, schedule, and extra support to see a quick summary of your custom care plan here.";
-          return;
-        }
-
-        let text = "You’re looking for ";
-
-        if (age) {
-          text += age.toLowerCase() + " care";
-        }
-
-        if (sched) {
-          if (age) text += ", with ";
-          else text += "a ";
-          text += sched.toLowerCase();
-        }
-
-        if (extraOptions.length > 0) {
-          text += age || sched ? ", plus " : "support with ";
-          text += extraOptions.join(", ").toLowerCase();
-        }
-
-        text += ". I’ll follow up with a clear plan and rate quote for this setup.";
-        planSummary.textContent = text;
-      }
-
-      if (ageGroup) ageGroup.addEventListener("change", updatePlan);
-      if (schedule) schedule.addEventListener("change", updatePlan);
-      if (extras) extras.addEventListener("change", updatePlan);
-    })();
-
-    // Sample day toggles
-    (function () {
-      const mapping = {
-        infant:
-          "8:30 breakfast & smiles • 9:00 tummy time & songs • 11:30 feed & nap • 2:00 gentle play & walk • 5:30 wind-down & bedtime routine.",
-        toddler:
-          "8:00 breakfast & silly songs • 9:30 park or backyard play • 11:30 lunch & quiet play • 1:00 nap/quiet time • 3:30 crafts & story time • 6:00 baths, PJs & story.",
-        school:
-          "7:00 morning routine & school prep • 3:00 pickup & snack • 3:30 homework & reading support • 5:00 outdoor play • 7:30 evening wind-down & next-day prep."
-      };
-
-      const buttons = document.querySelectorAll("#sampleDayToggle .pill-toggle");
-      const textEl = document.getElementById("sampleDayText");
-      if (!buttons.length || !textEl) return;
-
-      buttons.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          buttons.forEach(function (b) {
-            b.classList.remove("active");
-          });
-          btn.classList.add("active");
-          const key = btn.getAttribute("data-day");
-          if (key && mapping[key]) {
-            textEl.textContent = mapping[key];
-          }
-        });
-      });
-    })();
-
-    // Pill toggle for preferred window (contact form)
-    (function () {
-      const groups = document.querySelectorAll(".pill-toggle-group[data-target-input]");
-      if (!groups.length) return;
-
-      groups.forEach(function (group) {
-        const targetId = group.getAttribute("data-target-input");
-        const hidden = targetId ? document.getElementById(targetId) : null;
-        const buttons = group.querySelectorAll(".pill-toggle");
-        if (!hidden || !buttons.length) return;
-
-        buttons.forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            buttons.forEach(function (b) {
-              b.classList.remove("active");
-            });
-            btn.classList.add("active");
-            const value = btn.getAttribute("data-value") || "";
-            hidden.value = value;
-          });
-        });
-      });
-    })();
-
-    // IntersectionObserver reveal
-    (function () {
-      const elements = document.querySelectorAll("[data-reveal]");
-      if (!elements.length) return;
-
-      if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(
-          function (entries, obs) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("in-view");
-                obs.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.12 }
-        );
-
-        elements.forEach(function (el) {
-          observer.observe(el);
-        });
-      } else {
-        elements.forEach(function (el) {
-          el.classList.add("in-view");
-        });
-      }
-    })();
-
-    // Copy snippet buttons
-    (function () {
-      function handleCopy(text) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).catch(function () {});
-        } else {
-          const temp = document.createElement("textarea");
-          temp.value = text;
-          document.body.appendChild(temp);
-          temp.select();
-          try {
-            document.execCommand("copy");
-          } catch (e) {}
-          document.body.removeChild(temp);
-        }
-      }
-
-      document.querySelectorAll("[data-copy-text]").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          const text = btn.getAttribute("data-copy-text") || "";
-          if (!text) return;
-          handleCopy(text);
-          btn.textContent = "Copied! Ready to paste.";
-          setTimeout(function () {
-            btn.innerHTML = '<span class="icon">📋</span>Copy perfect intro';
-          }, 1800);
-        });
-      });
-
-      const emailSummaryBtn = document.getElementById("emailSummaryBtn");
-      if (emailSummaryBtn) {
-        emailSummaryBtn.addEventListener("click", function () {
-          const subject = encodeURIComponent("Nicole's Nannying – quick summary");
-          const body = encodeURIComponent(
-            "Here’s a quick snapshot of Nicole’s Nannying:\n\n" +
-              "- In-home nanny in Northwest Arkansas (NWA)\n" +
-              "- 10+ years experience, mother of 3\n" +
-              "- Infant & child CPR / First Aid certified\n" +
-              "- Typical rates: $15–$20/hr (clear quote before starting)\n" +
-              "- Supports infants, toddlers, and school-age kids\n\n" +
-              "Website notes: add your family’s details under Contact + keep this email handy for easy reference."
-          );
-          window.location.href = "mailto:?subject=" + subject + "&body=" + body;
-        });
-      }
-    })();
-
-<!-- SIMPLE MODAL HANDLING -->
 <script>
+/* -----------------------------
+    YEAR IN FOOTER
+------------------------------ */
 (function () {
-  function openModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.add("show");
+  const yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+})();
+
+/* -----------------------------
+    LOADING OVERLAY
+------------------------------ */
+(function () {
+  const overlay = document.getElementById("loadingOverlay");
+  const pageRoot = document.getElementById("pageRoot");
+  const phraseEl = document.getElementById("loadingPhrase");
+
+  const phrases = [
+    "Tidying up the playroom…",
+    "Finding the favorite stuffed animal…",
+    "Refreshing the snack stash…",
+    "Softening the bedtime stories…",
+    "Packing the diaper bag…",
+    "Straightening the tiny shoes…",
+    "Smoothing out the blanket forts…",
+    "Cueing up lullabies…",
+    "Double-checking emergency contacts…",
+    "Planning craft time…",
+    "Wiping sticky fingerprints…",
+    "Checking nap schedules twice…",
+    "Fluffing the reading chair…",
+    "Warming bottles & hearts…",
+    "Recharging the bubble machine…"
+  ];
+
+  let i = 0;
+  setInterval(() => {
+    if (phraseEl) phraseEl.textContent = phrases[i++ % phrases.length];
+  }, 900);
+
+  const start = Date.now();
+  const MIN_DISPLAY = 5500;
+
+  function hideOverlay() {
+    const elapsed = Date.now() - start;
+    const wait = Math.max(0, MIN_DISPLAY - elapsed);
+
+    setTimeout(() => {
+      overlay.classList.add("hidden");
+      document.body.classList.remove("loading");
+      pageRoot.classList.add("ready");
+    }, wait);
   }
 
-  function closeModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.remove("show");
+  window.addEventListener("load", hideOverlay);
+})();
+ 
+/* -----------------------------
+    NAVIGATION + TOGGLES
+------------------------------ */
+(function () {
+  function scrollToSection(targetSelector) {
+    const el = document.querySelector(targetSelector);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top, behavior: "smooth" });
   }
 
-  document.querySelectorAll("[data-modal-open]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const id = btn.getAttribute("data-modal-open");
-      if (id) openModal(id);
+  document.querySelectorAll("[data-scroll]").forEach((link) => {
+    link.addEventListener("click", () => {
+      scrollToSection(link.getAttribute("data-scroll"));
+      document.getElementById("navLinks")?.classList.remove("open");
     });
   });
 
-  document.querySelectorAll("[data-modal-close]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const id = btn.getAttribute("data-modal-close");
-      if (id) closeModal(id);
-    });
+  document.getElementById("mobileNavToggle")?.addEventListener("click", () => {
+    document.getElementById("navLinks")?.classList.toggle("open");
   });
-
-  const authModal = document.getElementById("authModal");
-  if (authModal) {
-    authModal.addEventListener("click", function (e) {
-      if (e.target === authModal) closeModal("authModal");
-    });
-  }
 })();
 </script>
 
 
-<!-- ⭐ FIREBASE INITIALIZATION — MUST COME FIRST ⭐ -->
+<!-- ⭐ SIMPLE MODAL HANDLING (NOT DUPLICATED ANYMORE) ⭐ -->
+<script>
+(function () {
+  function openModal(id) {
+    document.getElementById(id)?.classList.add("show");
+  }
+  function closeModal(id) {
+    document.getElementById(id)?.classList.remove("show");
+  }
+
+  document.querySelectorAll("[data-modal-open]").forEach((btn) => {
+    btn.addEventListener("click", () => openModal(btn.dataset.modalOpen));
+  });
+
+  document.querySelectorAll("[data-modal-close]").forEach((btn) => {
+    btn.addEventListener("click", () => closeModal(btn.dataset.modalClose));
+  });
+
+  const authModal = document.getElementById("authModal");
+  authModal?.addEventListener("click", (e) => {
+    if (e.target === authModal) closeModal("authModal");
+  });
+})();
+</script>
+
+
+<!-- ⭐ FIREBASE INITIALIZATION (MUST LOAD FIRST) ⭐ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -1903,24 +1700,20 @@ const firebaseConfig = {
   appId: "1:1044807204462:web:eadc9cab95f25eaa2d307f"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Make services GLOBAL so other scripts can use them
+// Make these GLOBAL
 window.auth = getAuth(app);
 window.db = getFirestore(app);
 window.storage = getStorage(app);
 </script>
 
 
-<!-- ⭐ SIGNUP / LOGIN SCRIPT -->
+<!-- ⭐ SIGNUP + LOGIN ⭐ -->
 <script type="module">
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword 
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword }
+from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-// Signup
 window.signup = async () => {
   const email = document.getElementById("authEmail").value;
   const pass = document.getElementById("authPass").value;
@@ -1929,7 +1722,6 @@ window.signup = async () => {
   alert("Account created!");
 };
 
-// Login
 window.login = async () => {
   const email = document.getElementById("authEmail").value;
   const pass = document.getElementById("authPass").value;
@@ -1940,16 +1732,14 @@ window.login = async () => {
 </script>
 
 
-<!-- ⭐ REAL-TIME AVAILABILITY LISTENER ⭐ -->
+<!-- ⭐ REAL-TIME AVAILABILITY ⭐ -->
 <script type="module">
 import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-// Reference to Firestore document
 const availabilityRef = doc(window.db, "availability", "current");
 
-// Listen for updates in REAL TIME
-onSnapshot(availabilityRef, (snapshot) => {
-  const data = snapshot.data();
+onSnapshot(availabilityRef, (snap) => {
+  const data = snap.data();
   if (!data) return;
 
   document.querySelector('[data-day="mon"]').className = "availability-dot " + data.monday;
@@ -1962,4 +1752,3 @@ onSnapshot(availabilityRef, (snapshot) => {
 
 </body>
 </html>
-
