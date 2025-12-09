@@ -856,7 +856,7 @@
       margin-inline: auto;
     }
 
-    .availability-dot.ok {
+    .availability-dot.open {
       background: #22c55e;
     }
 
@@ -1674,7 +1674,7 @@
         navLinks.classList.toggle("open");
       });
     })();
-
+  </script>
 <script>
   // Custom plan summary
   (function () {
@@ -1928,7 +1928,6 @@
 
   // Initialize services
   const app = initializeApp(firebaseConfig);
-  window.auth = getAuth(app);
   window.auth = getAuth(app);
   window.db = getFirestore(app);
   window.storage = getStorage(app);
