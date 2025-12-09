@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin – Update Availability</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+    h2 { margin-bottom: 10px; }
+    label { display: block; margin-top: 15px; }
+    select { width: 100%; padding: 6px; margin-top: 5px; }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      background: #c8a97e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover { background: #b0895d; }
+  </style>
+</head>
+<body>
+
+<div id="admin">
+  <h2>Update Availability</h2>
+
+  <label>Monday</label>
+  <select id="monday">
+    <option value="open">Open</option>
+    <option value="limited">Limited</option>
+    <option value="full">Full</option>
+  </select>
+
+  <label>Tuesday</label>
+  <select id="tuesday">
+    <option value="open">Open</option>
+    <option value="limited">Limited</option>
+    <option value="full">Full</option>
+  </select>
+
+  <label>Wednesday</label>
+  <select id="wednesday">
+    <option value="open">Open</option>
+    <option value="limited">Limited</option>
+    <option value="full">Full</option>
+  </select>
+
+  <label>Thursday</label>
+  <select id="thursday">
+    <option value="open">Open</option>
+    <option value="limited">Limited</option>
+    <option value="full">Full</option>
+  </select>
+
+  <label>Friday</label>
+  <select id="friday">
+    <option value="open">Open</option>
+    <option value="limited">Limited</option>
+    <option value="full">Full</option>
+  </select>
+
+  <button id="saveBtn">Save Changes</button>
+</div>
+
+<!-- ⭐ FIREBASE INITIALIZATION (REQUIRED!) ⭐ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+  // TODO: Replace with your actual Firebase config:
+  const firebaseConfig = {
+    apiKey: "AIzaSyBTI3bGmMOc0g2VG_KdYx_5XS6yBzj20K4",
+    authDomain: "nicoles-nannying.firebaseapp.com",
+    projectId: "nicoles-nannyingD",
+    storageBucket: "nicoles-nannying.firebasestorage.app",
+    messagingSenderId: "1044807204462",
+    appId: "1:1044807204462:web:eadc9cab95f25eaa2d307f"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  document.getElementById("saveBtn").addEventListener("click", async () => {
+    await setDoc(doc(db, "availability", "current"), {
+      monday: document.getElementById("monday").value,
+      tuesday: document.getElementById("tuesday").value,
+      wednesday: document.getElementById("wednesday").value,
+      thursday: document.getElementById("thursday").value,
+      friday: document.getElementById("friday").value,
+    }, { merge: true });
+
+    alert("Availability updated!");
+  });
+</script>
+</body>
+</html>
