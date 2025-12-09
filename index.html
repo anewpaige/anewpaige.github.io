@@ -1214,25 +1214,25 @@
                   <div class="availability-grid" aria-hidden="true">
                     <div class="availability-day">
                       <span>Mon</span>
-                      <div class="availability-dot ok"></div>
-                    </div>
+                      <div class="availability-dot" data-day="mon"></div>
+                      </div>
                     <div class="availability-day">
                       <span>Tue</span>
-                      <div class="availability-dot ok"></div>
-                    </div>
+                      <div class="availability-dot" data-day="tue"></div>
+                      </div>
                     <div class="availability-day">
                       <span>Wed</span>
-                      <div class="availability-dot limited"></div>
-                    </div>
+                      <div class="availability-dot" data-day="wed"></div>
+                      </div>
                     <div class="availability-day">
                       <span>Thu</span>
-                      <div class="availability-dot ok"></div>
-                    </div>
+                      <div class="availability-dot" data-day="thu"></div>
+                      </div>
                     <div class="availability-day">
                       <span>Fri</span>
-                      <div class="availability-dot limited"></div>
+                      <div class="availability-dot" data-day="fri"></div>
+                      </div>
                     </div>
-                  </div>
                   <div style="font-size:0.78rem;margin-top:5px;">
                     Green = open, orange = limited. Exact schedule will be confirmed with you personally.
                   </div>
@@ -1471,7 +1471,7 @@
             <div class="section-body two-col">
               <div>
                 <form
-                  action="https://formspree.io/f/your-form-id"
+                  action="https://formspree.io/f/mrbnaoyq"
                   method="POST"
                 >
                   <div class="field-group">
@@ -1557,6 +1557,10 @@
         <input id="authEmail" type="email" placeholder="you@example.com" />
       </div>
       <div class="field-group">
+  <label for="authPass">Password</label>
+  <input id="authPass" type="password" placeholder="Enter password" />
+</div>
+      <div class="field-group">
         <label for="authNotes">Notes about your family</label>
         <textarea id="authNotes" placeholder="Kids’ names, ages, routines, allergies…"></textarea>
       </div>
@@ -1565,6 +1569,8 @@
         time you contact Nicole.
       </div>
       <div class="btn-row">
+        <button onclick="signup()" class="btn btn-primary btn-sm">Create Account</button>
+  <button onclick="login()" class="btn btn-ghost btn-sm">Log In</button>
         <button class="btn btn-ghost btn-sm" type="button" data-modal-close="authModal">Close</button>
       </div>
     </div>
@@ -1907,6 +1913,46 @@
   const db = getFirestore(app);
   const storage = getStorage(app);
 </script>
+  <script type="module">
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+window.signup = async () => {
+  const email = document.getElementById("authEmail").value;
+  const pass = document.getElementById("authPass").value;
+
+  await createUserWithEmailAndPassword(auth, email, pass);
+  alert("Account created!");
+};
+
+window.login = async () => {
+  const email = document.getElementById("authEmail").value;
+  const pass = document.getElementById("authPass").value;
+
+  await signInWithEmailAndPassword(auth, email, pass);
+  alert("Logged in!");
+};
+</script>
+  <script type="module">
+  import { doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+  const availabilityRef = doc(db, "availability", "current");
+
+  onSnapshot(availabilityRef, (snapshot) => {
+    const data = snapshot.data();
+    if (!data) return;
+
+    document.querySelector('[data-day="mon"]').className = "availability-dot " + data.monday;
+    document.querySelector('[data-day="tue"]').className = "availability-dot " + data.tuesday;
+    document.querySelector('[data-day="wed"]').className = "availability-dot " + data.wednesday;
+    document.querySelector('[data-day="thu"]').className = "availability-dot " + data.thursday;
+    document.querySelector('[data-day="fri"]').className = "availability-dot " + data.friday;
+  });
+    
+</script>
+  
 </body>
 </html>
 ```
