@@ -1512,6 +1512,9 @@
                     <textarea id="message" name="message" required></textarea>
                   </div>
 
+                   <!-- 🔒 Hidden field that will carry the custom plan text -->
+                  <input type="hidden" id="carePlanSummary" name="care_plan_summary" />
+
                   <button class="btn btn-primary" type="submit">
                     Send inquiry &amp; check availability
                   </button>
@@ -1672,55 +1675,71 @@
       });
     })();
 
-    // Custom plan summary
-    (function () {
-      const ageGroup = document.getElementById("ageGroup");
-      const schedule = document.getElementById("schedule");
-      const extras = document.getElementById("extras");
-      const planSummary = document.getElementById("planSummary");
+<script>
+  // Custom plan summary
+  (function () {
+    const ageGroup = document.getElementById("ageGroup");
+    const schedule = document.getElementById("schedule");
+    const extras = document.getElementById("extras");
+    const planSummary = document.getElementById("planSummary");
+    const carePlanInput = document.getElementById("carePlanSummary"); // 🔗 hidden input
 
-      function updatePlan() {
-        if (!planSummary) return;
+    const defaultText =
+      "Choose your children’s age, schedule, and extra support to see a quick summary of your custom care plan here.";
 
-        const age = ageGroup ? ageGroup.value : "";
-        const sched = schedule ? schedule.value : "";
-        const extraOptions = extras
-          ? Array.from(extras.selectedOptions || []).map(function (o) {
-              return o.value;
-            })
-          : [];
+    function updatePlan() {
+      if (!planSummary) return;
 
-        if (!age && !sched && extraOptions.length === 0) {
-          planSummary.textContent =
-            "Choose your children’s age, schedule, and extra support to see a quick summary of your custom care plan here.";
-          return;
-        }
+      const age = ageGroup ? ageGroup.value : "";
+      const sched = schedule ? schedule.value : "";
+      const extraOptions = extras
+        ? Array.from(extras.selectedOptions || []).map(function (o) {
+            return o.value;
+          })
+        : [];
 
-        let text = "You’re looking for ";
-
-        if (age) {
-          text += age.toLowerCase() + " care";
-        }
-
-        if (sched) {
-          if (age) text += ", with ";
-          else text += "a ";
-          text += sched.toLowerCase();
-        }
-
-        if (extraOptions.length > 0) {
-          text += age || sched ? ", plus " : "support with ";
-          text += extraOptions.join(", ").toLowerCase();
-        }
-
-        text += ". I’ll follow up with a clear plan and rate quote for this setup.";
-        planSummary.textContent = text;
+      // Nothing selected: use default text
+      if (!age && !sched && extraOptions.length === 0) {
+        planSummary.textContent = defaultText;
+        if (carePlanInput) carePlanInput.value = defaultText;
+        return;
       }
 
-      if (ageGroup) ageGroup.addEventListener("change", updatePlan);
-      if (schedule) schedule.addEventListener("change", updatePlan);
-      if (extras) extras.addEventListener("change", updatePlan);
-    })();
+      let text = "You’re looking for ";
+
+      if (age) {
+        text += age.toLowerCase() + " care";
+      }
+
+      if (sched) {
+        if (age) text += ", with ";
+        else text += "a ";
+        text += sched.toLowerCase();
+      }
+
+      if (extraOptions.length > 0) {
+        text += age || sched ? ", plus " : "support with ";
+        text += extraOptions.join(", ").toLowerCase();
+      }
+
+      text += ". I’ll follow up with a clear plan and rate quote for this setup.";
+
+      // Update visible box
+      planSummary.textContent = text;
+
+      // 🔒 Update hidden field for Formspree
+      if (carePlanInput) {
+        carePlanInput.value = text;
+      }
+    }
+
+    if (ageGroup) ageGroup.addEventListener("change", updatePlan);
+    if (schedule) schedule.addEventListener("change", updatePlan);
+    if (extras) extras.addEventListener("change", updatePlan);
+
+    // Initialize hidden field on page load
+    updatePlan();
+  })();
 
     // Sample day toggles
     (function () {
