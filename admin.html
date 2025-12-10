@@ -98,5 +98,197 @@
     alert("Availability updated!");
   });
 </script>
+  <!-- ------------------------- -->
+<!-- REVIEW MODERATION SYSTEM -->
+<!-- ------------------------- -->
+<h2 style="margin-top:40px;">Pending Reviews</h2>
+<div id="pendingReviews"></div>
+
+<h2 style="margin-top:40px;">Public Reviews</h2>
+<div id="publicReviews"></div>
+
+<!-- Reply Modal -->
+<div id="replyModal" style="
+  display:none; 
+  position:fixed; 
+  inset:0; 
+  background:rgba(0,0,0,0.4); 
+  align-items:center; 
+  justify-content:center;">
+  <div style="background:white; padding:20px; border-radius:12px; width:320px;">
+    <h3>Reply to Review</h3>
+    <textarea id="replyText" style="width:100%; height:100px;"></textarea>
+    <button id="sendReplyBtn" style="margin-top:10px; width:100%;">Send Reply</button>
+    <button id="closeReplyBtn" style="margin-top:10px; width:100%;">Cancel</button>
+  </div>
+</div>
+
+<script type="module">
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  deleteDoc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+/* ------------------------------------------------------
+   ELEMENTS
+------------------------------------------------------ */
+const pendingContainer = document.getElementById("pendingReviews");
+const publicContainer = document.getElementById("publicReviews");
+const replyModal = document.getElementById("replyModal");
+const replyText = document.getElementById("replyText");
+const sendReplyBtn = document.getElementById("sendReplyBtn");
+const closeReplyBtn = document.getElementById("closeReplyBtn");
+
+let currentReplyReviewId = null;
+
+/* ------------------------------------------------------
+   LOAD PENDING REVIEWS
+------------------------------------------------------ */
+async function loadPending() {
+  const snap = await getDocs(collection(db, "reviews_pending"));
+  pendingContainer.innerHTML = "";
+
+  snap.forEach(docSnap => {
+    const r = docSnap.data();
+    const id = docSnap.id;
+
+    const div = document.createElement("div");
+    div.style = `
+      padding:12px; 
+      border:1px solid #ddd; 
+      border-radius:6px; 
+      margin-top:10px;
+    `;
+
+    div.innerHTML = `
+      <strong>${r.name}</strong> — ${r.date}<br>
+      <em>${r.review}</em><br>
+      <small>Age Group: ${r.ageGroup || "—"}</small><br>
+      <small>Care Type: ${r.careType || "—"}</small><br>
+      ${
+        r.socialPlatform
+          ? `<small>Social: ${r.socialPlatform} ${
+              r.socialHandle ? r.socialHandle : "(anonymous)"
+            }</small><br>`
+          : ""
+      }
+      <button data-approve="${id}" style="margin-top:8px;">Approve</button>
+      <button data-reject="${id}" style="margin-top:8px;">Reject</button>
+    `;
+
+    pendingContainer.appendChild(div);
+  });
+}
+
+/* ------------------------------------------------------
+   LOAD PUBLIC REVIEWS
+------------------------------------------------------ */
+async function loadPublic() {
+  const snap = await getDocs(collection(db, "reviews_public"));
+  publicContainer.innerHTML = "";
+
+  snap.forEach(docSnap => {
+    const r = docSnap.data();
+    const id = docSnap.id;
+
+    const div = document.createElement("div");
+    div.style = `
+      padding:12px; 
+      border:1px solid #ddd; 
+      border-radius:6px; 
+      margin-top:10px;
+    `;
+
+    div.innerHTML = `
+      <strong>${r.name}</strong> — ${r.date}<br>
+      <em>${r.review}</em><br>
+      <button data-reply="${id}" style="margin-top:8px;">Reply</button>
+    `;
+
+    publicContainer.appendChild(div);
+  });
+}
+
+/* ------------------------------------------------------
+   APPROVE OR REJECT REVIEW
+------------------------------------------------------ */
+document.addEventListener("click", async (e) => {
+  const approveId = e.target.getAttribute("data-approve");
+  const rejectId = e.target.getAttribute("data-reject");
+  const replyId = e.target.getAttribute("data-reply");
+
+  // Approve Review
+  if (approveId) {
+    const pendingSnap = await getDocs(collection(db, "reviews_pending"));
+    pendingSnap.forEach(async (d) => {
+      if (d.id === approveId) {
+        await setDoc(doc(db, "reviews_public", approveId), d.data());
+        await deleteDoc(doc(db, "reviews_pending", approveId));
+      }
+    });
+
+    alert("Review approved!");
+    loadPending();
+    loadPublic();
+  }
+
+  // Reject Review
+  if (rejectId) {
+    await deleteDoc(doc(db, "reviews_pending", rejectId));
+    alert("Review rejected.");
+    loadPending();
+  }
+
+  // Open reply modal
+  if (replyId) {
+    currentReplyReviewId = replyId;
+    replyModal.style.display = "flex";
+  }
+});
+
+/* ------------------------------------------------------
+   HANDLE REPLY SUBMISSION
+------------------------------------------------------ */
+sendReplyBtn.addEventListener("click", async () => {
+  if (!currentReplyReviewId) return;
+
+  const text = replyText.value.trim();
+  if (!text) return alert("Reply cannot be empty.");
+
+  await setDoc(
+    doc(db, "review_replies", currentReplyReviewId),
+    {
+      replies: [
+        {
+          text,
+          date: new Date().toISOString(),
+          nicole: "Nicole"
+        }
+      ]
+    },
+    { merge: true }
+  );
+
+  replyText.value = "";
+  replyModal.style.display = "none";
+
+  alert("Reply posted!");
+});
+
+closeReplyBtn.addEventListener("click", () => {
+  replyModal.style.display = "none";
+});
+
+/* ------------------------------------------------------
+   INITIAL LOAD
+------------------------------------------------------ */
+loadPending();
+loadPublic();
+</script>
+
 </body>
 </html>
