@@ -983,6 +983,231 @@
       text-decoration-thickness: 1px;
     }
 
+    /* --------------------------------------------- */
+/* REVIEWS SECTION — MOM-FRIENDLY PREMIUM DESIGN */
+/* --------------------------------------------- */
+
+#reviews {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  box-shadow: var(--shadow-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Title area alignment */
+#reviews .section-title h2 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #4b5563;
+}
+
+/* ----------------------- */
+/* 3D HOLOGRAPHIC CAROUSEL */
+/* ----------------------- */
+
+.review-carousel {
+  margin-top: 14px;
+  position: relative;
+  height: 280px;
+  perspective: 1200px;
+  overflow: visible;
+}
+
+.carousel-track {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s ease;
+}
+
+.review-card {
+  position: absolute;
+  width: 280px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 18px 40px rgba(15,23,42,0.08);
+  color: var(--text);
+  opacity: 0.94;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: 
+    transform 0.6s ease,
+    opacity 0.6s ease,
+    box-shadow 0.6s ease;
+}
+
+.review-card.active {
+  opacity: 1;
+  box-shadow: 0 22px 50px rgba(200,169,126,0.25);
+  transform: scale(1.06) translateZ(60px);
+}
+
+/* Reviewer name */
+.review-card .rev-name {
+  font-weight: 600;
+  font-size: 0.93rem;
+  margin-bottom: 4px;
+}
+
+/* Date */
+.review-card .rev-date {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+/* Text */
+.review-card .rev-text {
+  font-size: 0.88rem;
+  color: #4b5563;
+  line-height: 1.45;
+}
+
+/* Social tag */
+.rev-social {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+/* -------------------- */
+/* CAROUSEL NAV BUTTONS */
+/* -------------------- */
+
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: 
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.carousel-nav:hover {
+  background: #fff;
+  box-shadow: 0 10px 22px rgba(200,169,126,0.22);
+  transform: translateY(-50%) scale(1.08);
+}
+
+#carouselPrev { left: -6px; }
+#carouselNext { right: -6px; }
+
+/* ---------------- */
+/* SORTING BAR UI */
+/* ---------------- */
+
+.review-sort-bar {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.review-sort-bar select {
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #f7fafc;
+  font-size: 0.85rem;
+}
+
+/* ------------------------ */
+/* CTA "Leave a review" box */
+/* ------------------------ */
+
+.review-cta {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.review-cta h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.review-cta p {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* -------------------------- */
+/* MODAL FOR SUBMITTING REVIEW */
+/* -------------------------- */
+
+.review-modal {
+  max-width: 430px;
+}
+
+.review-modal .field-group {
+  margin-bottom: 12px;
+}
+
+#socialHandleGroup {
+  margin-top: 10px;
+}
+
+.social-anon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* ---------------- */
+/* SEASONAL SNOW FX */
+/* ---------------- */
+
+@keyframes snowflakeFall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(300px) rotate(360deg); opacity: 0.4; }
+}
+
+.snowflake {
+  position: absolute;
+  top: -20px;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  animation: snowflakeFall linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Improved mobile handling */
+@media (max-width: 600px) {
+  .review-carousel {
+    height: 320px;
+  }
+  .review-card {
+    width: 240px;
+  }
+}
+
     /* Responsive */
 
     @media (max-width: 900px) {
@@ -1391,6 +1616,122 @@
             </div>
           </div>
         </section>
+
+        <!-- REVIEWS (PUBLIC SHOWCASE + SUBMISSION) -->
+<section id="reviews" data-reveal>
+  <div class="section-inner">
+
+    <div class="section-title">
+      <h2>Parent Reviews</h2>
+      <span class="label">Real words from real families</span>
+    </div>
+
+    <!-- 3D Holographic Carousel -->
+    <div id="reviewCarousel" class="review-carousel">
+      <div class="carousel-track" id="carouselTrack">
+        <!-- Reviews inserted dynamically from Firestore -->
+      </div>
+
+      <!-- Carousel navigation -->
+      <button class="carousel-nav prev" id="carouselPrev">‹</button>
+      <button class="carousel-nav next" id="carouselNext">›</button>
+    </div>
+
+    <!-- Sorting tools -->
+    <div class="review-sort-bar">
+      <label>Sort by:</label>
+      <select id="reviewSort">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="age_infant">Infant care</option>
+        <option value="age_toddler">Toddler care</option>
+        <option value="age_school">School-age</option>
+        <option value="social_included">Has social link</option>
+      </select>
+    </div>
+
+    <!-- CTA to leave a review -->
+    <div class="review-cta">
+      <h3>Have I nannied for your family?</h3>
+      <p>I’d love to hear about your experience.</p>
+      <button class="btn btn-primary" id="openReviewModal">
+        Leave a Review
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEW SUBMISSION MODAL -->
+<div class="modal-backdrop" id="reviewModal">
+  <div class="modal review-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" data-modal-close="reviewModal">&times;</button>
+
+    <div class="modal-title">Leave a Review</div>
+    <div class="modal-sub">Your review will be sent to Nicole for approval.</div>
+
+    <div class="field-group">
+      <label>Your name</label>
+      <input type="text" id="revName" required />
+    </div>
+
+    <div class="field-group">
+      <label>Date Nicole cared for your children</label>
+      <input type="date" id="revDate" required />
+    </div>
+
+    <div class="field-group">
+      <label>Age group</label>
+      <select id="revAgeGroup">
+        <option value="">Select</option>
+        <option value="infant">Infant</option>
+        <option value="toddler">Toddler</option>
+        <option value="school">School-age</option>
+        <option value="mixed">Mixed ages</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>Type of care</label>
+      <select id="revCareType">
+        <option value="">Select</option>
+        <option>Full-time nanny</option>
+        <option>Part-time nanny</option>
+        <option>Date nights</option>
+        <option>Weekends</option>
+        <option>Occasional care</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>You can find me on:</label>
+      <select id="revSocialPlatform">
+        <option value="">Choose platform</option>
+        <option value="Facebook">Facebook</option>
+        <option value="Instagram">Instagram</option>
+        <option value="X">X (Twitter)</option>
+        <option value="Snapchat">Snapchat</option>
+      </select>
+    </div>
+
+    <div class="field-group" id="socialHandleGroup">
+      <label>Social handle</label>
+      <input type="text" id="revSocialHandle" placeholder="@yourname" />
+      <div class="social-anon">
+        <input type="checkbox" id="revSocialAnon" />
+        <label for="revSocialAnon">Keep my social anonymous</label>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Your review</label>
+      <textarea id="revText" required></textarea>
+    </div>
+
+    <button class="btn btn-primary" id="submitReviewBtn">
+      Submit Review
+    </button>
+  </div>
+</div>
 
         <!-- PARENT TOOLS / FUTURE-FEEL FEATURES -->
         <section id="parent-tools" data-reveal>
@@ -1970,7 +2311,267 @@ window.login = async () => {
   });
     
 </script>
-  
+  <script type="module">
+/* -----------------------------------------------------
+   FIREBASE IMPORTS (reuse existing global auth/db)
+----------------------------------------------------- */
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  doc,
+  updateDoc,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+/* -----------------------------------------------------
+   DOM ELEMENTS
+----------------------------------------------------- */
+const reviewModal = document.getElementById("reviewModal");
+const openReviewBtn = document.getElementById("openReviewModal");
+const submitReviewBtn = document.getElementById("submitReviewBtn");
+
+/* Form fields */
+const revName = document.getElementById("revName");
+const revDate = document.getElementById("revDate");
+const revAgeGroup = document.getElementById("revAgeGroup");
+const revCareType = document.getElementById("revCareType");
+const revSocialPlatform = document.getElementById("revSocialPlatform");
+const revSocialHandle = document.getElementById("revSocialHandle");
+const revSocialAnon = document.getElementById("revSocialAnon");
+const revText = document.getElementById("revText");
+
+const carouselTrack = document.getElementById("carouselTrack");
+const carouselPrev = document.getElementById("carouselPrev");
+const carouselNext = document.getElementById("carouselNext");
+
+const reviewSort = document.getElementById("reviewSort");
+
+/* -----------------------------------------------------
+   OPEN / CLOSE REVIEW MODAL
+----------------------------------------------------- */
+openReviewBtn.addEventListener("click", () => {
+  reviewModal.classList.add("show");
+});
+
+document.querySelectorAll("[data-modal-close='reviewModal']").forEach(btn => {
+  btn.addEventListener("click", () => reviewModal.classList.remove("show"));
+});
+
+reviewModal.addEventListener("click", (e) => {
+  if (e.target === reviewModal) {
+    reviewModal.classList.remove("show");
+  }
+});
+
+/* -----------------------------------------------------
+   SUBMIT REVIEW → goes to reviews_pending
+----------------------------------------------------- */
+submitReviewBtn.addEventListener("click", async () => {
+  const name = revName.value.trim();
+  const date = revDate.value;
+  const ageGroup = revAgeGroup.value;
+  const careType = revCareType.value;
+  const platform = revSocialPlatform.value;
+  const handle = revSocialHandle.value.trim();
+  const anon = revSocialAnon.checked;
+  const text = revText.value.trim();
+
+  if (!name || !date || !text) {
+    alert("Please complete all required fields.");
+    return;
+  }
+
+  const payload = {
+    name,
+    date,
+    ageGroup,
+    careType,
+    socialPlatform: platform,
+    socialHandle: anon ? null : handle,
+    socialAnonymous: anon,
+    review: text,
+    timestamp: new Date(),
+  };
+
+  await addDoc(collection(window.db, "reviews_pending"), payload);
+
+  // Reset fields
+  revName.value = "";
+  revDate.value = "";
+  revAgeGroup.value = "";
+  revCareType.value = "";
+  revSocialPlatform.value = "";
+  revSocialHandle.value = "";
+  revSocialAnon.checked = false;
+  revText.value = "";
+
+  reviewModal.classList.remove("show");
+  alert("Thank you! Your review is pending Nicole’s approval.");
+});
+
+/* -----------------------------------------------------
+   PUBLIC REVIEWS — LISTEN IN REALTIME
+----------------------------------------------------- */
+let publicReviews = [];
+let carouselIndex = 0;
+
+async function loadReviews() {
+  const q = query(collection(window.db, "reviews_public"), orderBy("timestamp", "desc"));
+  const snap = await getDocs(q);
+
+  publicReviews = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  renderCarousel();
+}
+
+loadReviews();
+
+/* -----------------------------------------------------
+   RENDER REVIEW CARDS IN 3D CAROUSEL
+----------------------------------------------------- */
+function renderCarousel() {
+  carouselTrack.innerHTML = "";
+
+  const count = publicReviews.length;
+  if (!count) return;
+
+  const angle = 360 / count;
+  const radius = 330;
+
+  publicReviews.forEach((rev, i) => {
+    const card = document.createElement("div");
+    card.className = "review-card";
+
+    card.innerHTML = `
+      <div class="rev-name">${rev.name}</div>
+      <div class="rev-date">${rev.date}</div>
+      <div class="rev-text">${rev.review}</div>
+      ${
+        rev.socialPlatform
+          ? `<div class="rev-social">${rev.socialPlatform}${
+              rev.socialHandle ? ": " + rev.socialHandle : ""
+            }</div>`
+          : ""
+      }
+    `;
+
+    const rotation = angle * i;
+    card.style.transform = `
+      rotateY(${rotation}deg)
+      translateZ(${radius}px)
+    `;
+
+    carouselTrack.appendChild(card);
+  });
+
+  updateCarouselActive();
+}
+
+/* -----------------------------------------------------
+   ROTATION CONTROLS
+----------------------------------------------------- */
+function updateCarouselActive() {
+  const cards = carouselTrack.querySelectorAll(".review-card");
+  cards.forEach(card => card.classList.remove("active"));
+
+  const activeCard = cards[carouselIndex % cards.length];
+  if (activeCard) activeCard.classList.add("active");
+
+  const deg = (carouselIndex * -360) / cards.length;
+  carouselTrack.style.transform = `rotateY(${deg}deg)`;
+}
+
+carouselNext.addEventListener("click", () => {
+  carouselIndex = (carouselIndex + 1) % publicReviews.length;
+  updateCarouselActive();
+});
+
+carouselPrev.addEventListener("click", () => {
+  carouselIndex =
+    (carouselIndex - 1 + publicReviews.length) % publicReviews.length;
+  updateCarouselActive();
+});
+
+/* -----------------------------------------------------
+   SORTING LOGIC
+----------------------------------------------------- */
+reviewSort.addEventListener("change", () => {
+  const val = reviewSort.value;
+
+  switch (val) {
+    case "newest":
+      publicReviews.sort((a, b) => b.timestamp - a.timestamp);
+      break;
+
+    case "oldest":
+      publicReviews.sort((a, b) => a.timestamp - b.timestamp);
+      break;
+
+    case "age_infant":
+      publicReviews = publicReviews.filter(r => r.ageGroup === "infant");
+      break;
+
+    case "age_toddler":
+      publicReviews = publicReviews.filter(r => r.ageGroup === "toddler");
+      break;
+
+    case "age_school":
+      publicReviews = publicReviews.filter(r => r.ageGroup === "school");
+      break;
+
+    case "social_included":
+      publicReviews = publicReviews.filter(r => r.socialPlatform);
+      break;
+
+    default:
+      break;
+  }
+
+  renderCarousel();
+});
+
+/* -----------------------------------------------------
+   SEASONAL SNOW (DEC–FEB only ❄)
+----------------------------------------------------- */
+function createSnowflake() {
+  const now = new Date();
+  const month = now.getMonth(); // 0 = Jan
+
+  if (month !== 11 && month !== 0 && month !== 1) return;
+
+  const snow = document.createElement("div");
+  snow.className = "snowflake";
+  snow.textContent = "❄";
+
+  snow.style.left = Math.random() * 100 + "%";
+  snow.style.animationDuration = 3 + Math.random() * 4 + "s";
+  snow.style.fontSize = 0.7 + Math.random() * 0.6 + "rem";
+
+  document.getElementById("reviews").appendChild(snow);
+
+  setTimeout(() => snow.remove(), 6000);
+}
+
+setInterval(createSnowflake, 650);
+
+/* -----------------------------------------------------
+   TOUCH DRAG SUPPORT
+----------------------------------------------------- */
+let startX = 0;
+
+carouselTrack.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+});
+
+carouselTrack.addEventListener("touchend", (e) => {
+  const endX = e.changedTouches[0].clientX;
+  if (endX < startX - 40) carouselNext.click();
+  if (endX > startX + 40) carouselPrev.click();
+});
+</script>
+
 </body>
 </html>
 ```
