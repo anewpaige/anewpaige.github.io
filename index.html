@@ -1208,6 +1208,28 @@
   }
 }
 
+    /* --------------------------------------------- */
+/* NICHOLE REPLY BUBBLE (SOFT INDENTED STYLE)    */
+/* --------------------------------------------- */
+.review-reply {
+  margin-top: 14px;
+  margin-left: 8px;
+  padding: 10px 12px;
+  background: #fef9f4;
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #6b7280;
+  box-shadow: 0 4px 10px rgba(200,169,126,0.12);
+}
+
+.review-reply strong {
+  font-size: 0.78rem;
+  color: var(--accent-strong);
+  display: block;
+  margin-bottom: 3px;
+}
+
     /* Responsive */
 
     @media (max-width: 900px) {
@@ -1703,7 +1725,7 @@
     </div>
 
     <div class="field-group">
-      <label>You can find me on:</label>
+      <label for="revSocialPlatform">You can find me on:</label>
       <select id="revSocialPlatform">
         <option value="">Choose platform</option>
         <option value="Facebook">Facebook</option>
@@ -2423,7 +2445,24 @@ async function loadReviews() {
   const snap = await getDocs(q);
 
   publicReviews = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  await loadReplies();
   renderCarousel();
+}
+
+    async function loadReplies() {
+  const replySnaps = await getDocs(collection(window.db, "review_replies"));
+
+  const replyMap = {};
+
+  replySnaps.forEach(docSnap => {
+    replyMap[docSnap.id] = docSnap.data().replies || [];
+  });
+
+  publicReviews = publicReviews.map(r => ({
+    ...r,
+    replies: replyMap[r.id] || []
+  }));
 }
 
 loadReviews();
@@ -2444,18 +2483,19 @@ function renderCarousel() {
     const card = document.createElement("div");
     card.className = "review-card";
 
-    card.innerHTML = `
-      <div class="rev-name">${rev.name}</div>
-      <div class="rev-date">${rev.date}</div>
-      <div class="rev-text">${rev.review}</div>
-      ${
-        rev.socialPlatform
-          ? `<div class="rev-social">${rev.socialPlatform}${
-              rev.socialHandle ? ": " + rev.socialHandle : ""
-            }</div>`
-          : ""
-      }
-    `;
+card.innerHTML = `
+  <div class="rev-name">${rev.name}</div>
+  <div class="rev-date">${rev.date}</div>
+  <div class="rev-text">${rev.review}</div>
+  ${
+    rev.socialPlatform
+      ? `<div class="rev-social">${rev.socialPlatform}${
+          rev.socialHandle ? ": " + rev.socialHandle : ""
+        }</div>`
+      : ""
+  }
+  <div class="review-reply-container" id="reply-${rev.id}"></div>
+`;
 
     const rotation = angle * i;
     card.style.transform = `
@@ -2464,6 +2504,18 @@ function renderCarousel() {
     `;
 
     carouselTrack.appendChild(card);
+    
+    // Insert Nicole's reply if exists
+if (rev.replies && rev.replies.length > 0) {
+  const replyBox = document.getElementById(`reply-${rev.id}`);
+  const reply = rev.replies[0]; // Only one reply allowed
+  replyBox.innerHTML = `
+    <div class="review-reply">
+      <strong>Nicole replied:</strong>
+      ${reply.text}
+    </div>
+  `;
+}
   });
 
   updateCarouselActive();
