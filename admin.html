@@ -65,6 +65,20 @@
     <option value="full">Full</option>
   </select>
 
+  <label>Saturday</label>
+<select id="saturday">
+  <option value="open">Open</option>
+  <option value="limited">Limited</option>
+  <option value="full">Full</option>
+</select>
+
+<label>Sunday</label>
+<select id="sunday">
+  <option value="open">Open</option>
+  <option value="limited">Limited</option>
+  <option value="full">Full</option>
+</select>
+
   <button id="saveBtn">Save Changes</button>
 </div>
 
@@ -93,6 +107,8 @@
       wednesday: document.getElementById("wednesday").value,
       thursday: document.getElementById("thursday").value,
       friday: document.getElementById("friday").value,
+      saturday: document.getElementById("saturday").value,
+      sunday: document.getElementById("sunday").value,
     }, { merge: true });
 
     alert("Availability updated!");
