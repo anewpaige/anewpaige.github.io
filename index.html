@@ -1478,6 +1478,14 @@
                       <span>Fri</span>
                       <div class="availability-dot" data-day="fri"></div>
                     </div>
+                    <div class="availability-day">
+                      <span>Sat</span>
+                      <div class="availability-dot" data-day="sat"></div>
+                    </div>
+                    <div class="availability-day">
+                      <span>Sun</span>
+                      <div class="availability-dot" data-day="sun"></div>
+                    </div>
                   </div>
                   <div style="font-size:0.78rem;margin-top:5px;">
                     Green = open, orange = limited. Exact schedule will be confirmed with you personally.
@@ -2330,6 +2338,8 @@ window.login = async () => {
     document.querySelector('[data-day="wed"]').className = "availability-dot " + data.wednesday;
     document.querySelector('[data-day="thu"]').className = "availability-dot " + data.thursday;
     document.querySelector('[data-day="fri"]').className = "availability-dot " + data.friday;
+    document.querySelector('[data-day="sat"]').className = "availability-dot " + data.saturday;
+    document.querySelector('[data-day="sun"]').className = "availability-dot " + data.sunday;
   });
     
 </script>
